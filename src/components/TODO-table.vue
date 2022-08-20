@@ -5,7 +5,9 @@ export default {
   components: { TODOInput, TODOTaskItem },
   data() {
     return {
-      taskArr: [],
+      allTaskArr: [],
+      renderTaskArr: this.allTaskArr,
+      status: 0,
     };
   },
   methods: {
@@ -17,28 +19,59 @@ export default {
         deleted: false,
       };
       taskObj.taskName = task;
-      taskObj.id = this.taskArr.length + 1;
-      this.taskArr.push(taskObj);
+      taskObj.id = this.allTaskArr.length + 1;
+      this.allTaskArr.push(taskObj);
     },
     deleteAllTask: function () {
-      this.taskArr = [];
+      this.allTaskArr = [];
     },
     completed(data) {
       let id = data.id;
       let completed = data.completed;
-      for (let i = 0; i < this.taskArr.length; i++) {
-        if (id == this.taskArr[i].id) {
-          this.taskArr[i].completed = completed;
+      for (let i = 0; i < this.allTaskArr.length; i++) {
+        if (id == this.allTaskArr[i].id) {
+          this.allTaskArr[i].completed = completed;
         }
       }
     },
     deleted(id) {
       console.log(id);
-      for (let i = 0; i < this.taskArr.length; i++) {
-        if (id == this.taskArr[i].id) {
-          this.taskArr[i].deleted = true;
+      for (let i = 0; i < this.allTaskArr.length; i++) {
+        if (id == this.allTaskArr[i].id) {
+          this.allTaskArr[i].deleted = true;
         }
       }
+    },
+    statusHandler: function () {
+      console.log('123');
+      switch (this.status) {
+        case 1:
+          this.renderTaskArr = this.allTaskArr;
+          console.log(this.renderTaskArr);
+          break;
+        case 2: //進行 C : F D: F
+          this.renderTaskArr = [];
+          for (let i = 0; i < this.allTaskArr.length; i++) {
+            if (
+              false == this.allTaskArr[i].completed &&
+              false == this.allTaskArr[i].deleted
+            ) {
+              this.renderTaskArr.push(this.allTaskArr[i]);
+              console.log('78975');
+            }
+          }
+          console.log(this.renderTaskArr);
+      }
+    },
+  },
+  watch: {
+    status: 'statusHandler',
+    allTaskArr: {
+      handler(newValue, oldValue) {
+        console.log(newValue == oldValue);
+        this.renderTaskArr = this.allTaskArr;
+      },
+      deep: true,
     },
   },
 };
@@ -47,11 +80,18 @@ export default {
 <template>
   <div>
     <h2>TODO</h2>
-    <h2>{{ taskArr }}</h2>
+
+    <h2>all: {{ allTaskArr }}</h2>
+    <h2>renderTaskArr: {{ renderTaskArr }}</h2>
+    <h2>{{ status }}</h2>
     <TODOInput @sendOut="getTask" @deleteAll="deleteAllTask" />
+    <button @click="this.status = 1">全部</button>
+    <button @click="this.status = 2">進行中</button>
+    <button @click="this.status = 3">已完成</button>
+    <button @click="this.status = 4">已刪除</button>
     <ul>
       <TODOTaskItem
-        v-for="(item, index, key) in taskArr"
+        v-for="(item, index, key) in renderTaskArr"
         :taskName="item.taskName"
         :completed="item.completed"
         :deleted="item.deleted"
@@ -60,9 +100,7 @@ export default {
         :key="key"
         @itemCompleted="completed"
         @itemDeleted="deleted"
-      >
-        <div>123</div>
-      </TODOTaskItem>
+      />
     </ul>
   </div>
 </template>
