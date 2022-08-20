@@ -1,34 +1,31 @@
 <script>
 export default {
-  props: ['taskArrProp'],
+  props: ['taskName', 'deleted', 'completed', 'id'],
   data() {
     return {
-      taskArrPropOfItem: this.taskArrProp,
+      itemId: this.id,
+      itemDeleted: this.deleted,
+      itemCompleted: this.completed,
     };
   },
   methods: {
-    deleteItem: function () {
-      this.taskArrPropOfItem.deleted = true;
-      console.log(this.taskArrPropOfItem);
-      //我要把這個值傳出去 改變 外面的值
-      //這邊只是改變視覺狀態
-      //外面才能做分類
+    deletedItem: function () {
+      this.itemDeleted = true;
+      this.$emit('itemDeleted', this.itemId);
     },
-    completedItem() {
-      this.taskArrPropOfItem.completed = true;
+    completedItem: function () {
+      this.itemCompleted = true;
+      this.$emit('itemCompleted', this.itemId);
     },
   },
 };
 </script>
 
 <template>
-  <li
-    v-if="!this.taskArrPropOfItem.deleted"
-    :class="{ completedClass: taskArrPropOfItem.completed }"
-  >
-    <input type="checkbox" @click="completedItem()" />
-    {{ this.taskArrPropOfItem.name }}
-    <span @click="deleteItem()">X</span>
+  <li v-if="!deleted" :class="{ completedClass: itemCompleted }">
+    {{ taskName }}
+    <button @click="deletedItem()">X</button>
+    <input type="checkbox" @input="completedItem()" />
   </li>
 </template>
 
@@ -45,10 +42,12 @@ span {
 li {
   position: relative;
   width: 150px;
+  list-style: none;
+  padding: 10px;
 }
-li > span {
+li > input {
   position: absolute;
-  right: 0;
+  left: -20px;
 }
 .completedClass {
   text-decoration: line-through;

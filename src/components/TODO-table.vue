@@ -10,27 +10,60 @@ export default {
   },
   methods: {
     getTask: function (task) {
-      this.taskArr.push(task);
+      let taskObj = {
+        id: '',
+        taskName: '',
+        completed: false,
+        deleted: false,
+      };
+      taskObj.taskName = task;
+      taskObj.id = this.taskArr.length + 1;
+      this.taskArr.push(taskObj);
     },
     deleteAllTask() {
-      this.taskArr = '';
+      return (this.taskArr = '');
+    },
+    completed(id) {
+      console.log(id);
+      for (let i = 0; i < this.taskArr.length; i++) {
+        if (id == this.taskArr[i].id) {
+          this.taskArr[i].completed = true;
+        }
+      }
+    },
+    deleted(id) {
+      console.log(id);
+      for (let i = 0; i < this.taskArr.length; i++) {
+        if (id == this.taskArr[i].id) {
+          this.taskArr[i].deleted = true;
+        }
+      }
     },
   },
 };
 </script>
 
 <template>
-  <h2>TODO</h2>
-  <h2>{{ taskArr }}</h2>
-  <TODOInput @sendOut="getTask" @deleteAllTask="deleteAllTask" />
-  <ul>
-    <TODOTaskItem
-      v-for="(task, index) in taskArr"
-      :key="index"
-      :taskArrProp="task"
-    >
-    </TODOTaskItem>
-  </ul>
+  <div>
+    <h2>TODO</h2>
+    <h2>{{ taskArr }}</h2>
+    <TODOInput @sendOut="getTask" @deleteAllTask="deleteAllTask" />
+    <ul>
+      <TODOTaskItem
+        v-for="(item, index, key) in taskArr"
+        :taskName="item.taskName"
+        :completed="item.completed"
+        :deleted="item.deleted"
+        :id="item.id"
+        :index="index"
+        :key="key"
+        @itemCompleted="completed"
+        @itemDeleted="deleted"
+      >
+        <div>123</div>
+      </TODOTaskItem>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
