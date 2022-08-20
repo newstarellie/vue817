@@ -20,14 +20,15 @@ export default {
       taskObj.id = this.taskArr.length + 1;
       this.taskArr.push(taskObj);
     },
-    deleteAllTask() {
-      return (this.taskArr = '');
+    deleteAllTask: function () {
+      this.taskArr = [];
     },
-    completed(id) {
-      console.log(id);
+    completed(data) {
+      let id = data.id;
+      let completed = data.completed;
       for (let i = 0; i < this.taskArr.length; i++) {
         if (id == this.taskArr[i].id) {
-          this.taskArr[i].completed = true;
+          this.taskArr[i].completed = completed;
         }
       }
     },
@@ -47,7 +48,7 @@ export default {
   <div>
     <h2>TODO</h2>
     <h2>{{ taskArr }}</h2>
-    <TODOInput @sendOut="getTask" @deleteAllTask="deleteAllTask" />
+    <TODOInput @sendOut="getTask" @deleteAll="deleteAllTask" />
     <ul>
       <TODOTaskItem
         v-for="(item, index, key) in taskArr"

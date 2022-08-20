@@ -12,8 +12,10 @@ export default {
         this.task = '';
       }
     },
+    deletedAll() {
+      this.$emit('deleteAll', this.task);
+    },
   },
-  computed: {},
 };
 </script>
 
@@ -27,6 +29,7 @@ export default {
       v-on:keyup.enter="sendOutTask()"
     />
     <button @click="sendOutTask()">送出</button>
+    <button @click="deletedAll()">刪除全部</button>
   </div>
 </template>
 

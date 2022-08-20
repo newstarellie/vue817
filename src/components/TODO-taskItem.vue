@@ -13,9 +13,14 @@ export default {
       this.itemDeleted = true;
       this.$emit('itemDeleted', this.itemId);
     },
-    completedItem: function () {
-      this.itemCompleted = true;
-      this.$emit('itemCompleted', this.itemId);
+  },
+  watch: {
+    itemCompleted: function () {
+      let data = {
+        id: this.itemId,
+        completed: this.itemCompleted,
+      };
+      this.$emit('itemCompleted', data);
     },
   },
 };
@@ -25,7 +30,7 @@ export default {
   <li v-if="!deleted" :class="{ completedClass: itemCompleted }">
     {{ taskName }}
     <button @click="deletedItem()">X</button>
-    <input type="checkbox" @input="completedItem()" />
+    <input type="checkbox" v-model="itemCompleted" />
   </li>
 </template>
 
