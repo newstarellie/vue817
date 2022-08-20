@@ -4,26 +4,30 @@ export default {
   data() {
     return {
       taskArrPropOfItem: this.taskArrProp,
-      taskName: this.taskArrProp.name,
-      taskDeleted: this.taskArrProp.deleted,
-      taskCompleted: this.taskArrProp.completed,
     };
   },
   methods: {
     deleteItem: function () {
-      this.taskDeleted = true;
+      this.taskArrPropOfItem.deleted = true;
+      console.log(this.taskArrPropOfItem);
+      //我要把這個值傳出去 改變 外面的值
+      //這邊只是改變視覺狀態
+      //外面才能做分類
     },
     completedItem() {
-      this.taskCompleted = true;
+      this.taskArrPropOfItem.completed = true;
     },
   },
 };
 </script>
 
 <template>
-  <li v-if="!taskDeleted" :class="{ completedClass: taskCompleted }">
+  <li
+    v-if="!this.taskArrPropOfItem.deleted"
+    :class="{ completedClass: taskArrPropOfItem.completed }"
+  >
     <input type="checkbox" @click="completedItem()" />
-    {{ taskName }}
+    {{ this.taskArrPropOfItem.name }}
     <span @click="deleteItem()">X</span>
   </li>
 </template>

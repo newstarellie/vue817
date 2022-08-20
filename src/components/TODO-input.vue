@@ -12,9 +12,11 @@ export default {
   },
   methods: {
     sendOutTask() {
-      this.taskToObj.name = this.task;
-      this.$emit('sendOut', this.taskToObj);
-      this.task = '';
+      if (this.task) {
+        this.taskToObj.name = this.task;
+        this.$emit('sendOut', this.taskToObj);
+        this.task = '';
+      }
     },
     deleteAllTask() {
       this.$emit('deleteAllTask', '');
@@ -33,8 +35,8 @@ export default {
     v-model="task"
     v-on:keyup.enter="sendOutTask()"
   />
-  <span v-on:click="sendOutTask(this.task)">送出</span>
-  <span @click="deleteAllTask()">刪除全部</span>
+  <button :disabled="!task" v-on:click="sendOutTask(this.task)">送出</button>
+  <button @click="deleteAllTask()">刪除全部</button>
 </template>
 
 <style scoped>
