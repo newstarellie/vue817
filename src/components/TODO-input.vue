@@ -1,14 +1,19 @@
 <script>
-import TODOTaskItem from './TODO-taskItem.vue';
 export default {
   data() {
     return {
       task: '',
+      taskToObj: {
+        name: '',
+        completed: false,
+        deleted: false,
+      },
     };
   },
   methods: {
     sendOutTask() {
-      this.$emit('sendOut', this.task);
+      this.taskToObj.name = this.task;
+      this.$emit('sendOut', this.taskToObj);
       this.task = '';
     },
     deleteAllTask() {
@@ -16,7 +21,6 @@ export default {
       console.log('完成');
     },
   },
-  components: { TODOTaskItem },
   computed: {},
 };
 </script>
@@ -27,7 +31,7 @@ export default {
     type="text"
     placeholder="輸入要做的事情"
     v-model="task"
-    v-on:keyup.enter="sendOutTask(this.task)"
+    v-on:keyup.enter="sendOutTask()"
   />
   <span v-on:click="sendOutTask(this.task)">送出</span>
   <span @click="deleteAllTask()">刪除全部</span>

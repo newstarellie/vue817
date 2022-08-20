@@ -13,7 +13,7 @@ export default {
       this.taskArr.push(task);
     },
     deleteAllTask() {
-      this.taskArr = [];
+      this.taskArr = '';
     },
   },
 };
@@ -25,9 +25,9 @@ export default {
   <TODOInput @sendOut="getTask" @deleteAllTask="deleteAllTask" />
   <ul>
     <TODOTaskItem
-      v-for="(item, index) in taskArr"
+      v-for="(task, index) in taskArr"
       :key="index"
-      :taskName="item"
+      :taskArrProp="task"
     >
     </TODOTaskItem>
   </ul>

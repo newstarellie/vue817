@@ -1,12 +1,8 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue';
-import TODOInput from './components/TODO-input.vue';
 import TODOTable from './components/TODO-table.vue';
-import TODOTaskItem from './components/TODO-taskItem.vue';
 </script>
 
 <template>
-  <HelloWorld msg="You did it!" />
   <TODOTable />
 </template>
 

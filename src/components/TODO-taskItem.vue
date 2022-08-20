@@ -1,23 +1,28 @@
 <script>
 export default {
-  props: ['taskName'],
+  props: ['taskArrProp'],
   data() {
     return {
-      message: 1,
-      deleted: false,
+      taskArrPropOfItem: this.taskArrProp,
+      taskName: this.taskArrProp.name,
+      taskDeleted: this.taskArrProp.deleted,
+      taskCompleted: this.taskArrProp.completed,
     };
   },
   methods: {
     deleteItem: function () {
-      this.deleted = true;
+      this.taskDeleted = true;
+    },
+    completedItem() {
+      this.taskCompleted = true;
     },
   },
-  computed: {},
 };
 </script>
 
 <template>
-  <li v-if="!deleted">
+  <li v-if="!taskDeleted" :class="{ completedClass: taskCompleted }">
+    <input type="checkbox" @click="completedItem()" />
     {{ taskName }}
     <span @click="deleteItem()">X</span>
   </li>
@@ -40,5 +45,9 @@ li {
 li > span {
   position: absolute;
   right: 0;
+}
+.completedClass {
+  text-decoration: line-through;
+  color: gray;
 }
 </style>
