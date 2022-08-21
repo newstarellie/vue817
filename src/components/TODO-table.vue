@@ -7,7 +7,7 @@ export default {
     return {
       allTaskArr: [],
       renderTaskArr: this.allTaskArr,
-      status: 0,
+      status: 1,
     };
   },
   methods: {
@@ -42,14 +42,14 @@ export default {
         }
       }
     },
-    statusHandler: function () {
-      console.log('123');
+    statusHandler: function (value) {
+      console.log(value);
       switch (this.status) {
-        case 1:
+        case 1: //全部
           this.renderTaskArr = this.allTaskArr;
           console.log(this.renderTaskArr);
           break;
-        case 2: //進行 C : F D: F
+        case 2: //進行中 C : F D: F
           this.renderTaskArr = [];
           for (let i = 0; i < this.allTaskArr.length; i++) {
             if (
@@ -57,10 +57,29 @@ export default {
               false == this.allTaskArr[i].deleted
             ) {
               this.renderTaskArr.push(this.allTaskArr[i]);
-              console.log('78975');
+              console.log(this.renderTaskArr);
             }
           }
-          console.log(this.renderTaskArr);
+          break;
+        case 3: //已完成 C : T  D: F
+          this.renderTaskArr = [];
+          for (let i = 0; i < this.allTaskArr.length; i++) {
+            if (
+              true == this.allTaskArr[i].completed &&
+              false == this.allTaskArr[i].deleted
+            ) {
+              this.renderTaskArr.push(this.allTaskArr[i]);
+            }
+          }
+          break;
+        case 4: //已刪除
+          this.renderTaskArr = [];
+          for (let i = 0; i < this.allTaskArr.length; i++) {
+            if (true == this.allTaskArr[i].deleted) {
+              this.renderTaskArr.push(this.allTaskArr[i]);
+            }
+          }
+          break;
       }
     },
   },
@@ -70,6 +89,7 @@ export default {
       handler(newValue, oldValue) {
         console.log(newValue == oldValue);
         this.renderTaskArr = this.allTaskArr;
+        this.statusHandler('執行');
       },
       deep: true,
     },
@@ -80,10 +100,9 @@ export default {
 <template>
   <div>
     <h2>TODO</h2>
-
-    <h2>all: {{ allTaskArr }}</h2>
+    <!-- <h2>all: {{ allTaskArr }}</h2>
     <h2>renderTaskArr: {{ renderTaskArr }}</h2>
-    <h2>{{ status }}</h2>
+    <h2>{{ status }}</h2> -->
     <TODOInput @sendOut="getTask" @deleteAll="deleteAllTask" />
     <button @click="this.status = 1">全部</button>
     <button @click="this.status = 2">進行中</button>
@@ -91,13 +110,12 @@ export default {
     <button @click="this.status = 4">已刪除</button>
     <ul>
       <TODOTaskItem
-        v-for="(item, index, key) in renderTaskArr"
+        v-for="(item, index) in renderTaskArr"
         :taskName="item.taskName"
         :completed="item.completed"
         :deleted="item.deleted"
         :id="item.id"
-        :index="index"
-        :key="key"
+        :key="index"
         @itemCompleted="completed"
         @itemDeleted="deleted"
       />
